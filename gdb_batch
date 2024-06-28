@@ -1,0 +1,8 @@
+set logging file test_gdb_log
+set logging overwrite on 
+set logging redirect on
+set logging enabled on
+
+set debuginfo enabled off 
+run
+backtrace

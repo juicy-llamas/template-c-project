@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# ======
+# Config
+# ======
+
+export BUILD_ENV_IS_DEFINED=true
+
+# are we debugging (MUST BE EQUAL TO "true" for debugging to work!)
+# it is NOT sufficient for it to just be set
+export DEBUG=true
+
+# directories start from makefile directory
+export BDIR=build
+export SDIR=src
+export IDIR=src/include
+export TDIR=src/tests
+# Test output directory. You don't need to worry about this, everything in ./src/tests will be moved over
+# This is to assemble tests with utilities such as the pytest thing I wrote, which will convert JSON files
+# in $TDIR to C files in $TODIR
+export TODIR=build/tests_src_out
+# stands for IGNORE_FILES
+# if files are in a directory with this name, just ignore them (don't build or run them)
+# note: include files in directories of this name can still be explicitly included by specifiying the path.
+# also, files outside of SDIR, TDIR, or TODIR are implicitly ignored for compilation purposes 
+export IGNFLS=__ignore__
+# entry is the file with main, again specified from the root of the Makefile to prevent ambiguity
+# it's important because it's NOT linked with the tests
+# this is an absolute path with $SDIR as the root fyi
+export ENTRY=$SDIR/main.c
+ENTRYOBJNAMETEMP=${ENTRY%%.c}.o
+export ENTRYOBJ=$BDIR/${ENTRYOBJNAMETEMP##*/}
+# executable name
+export APPNAME=app
+
+export BENCHDIR=src/benching
+export BENCHMAIN=$BENCHDIR/bench_main.c
+export BENCHODIR=build/bench_src_out
+
+export TEST_TEMPLATE=src/templates/testtmpl.c_part
+export TEST_LOG_DIR=test_logs
+export TEST_LOGFILE_BASE=test_log_
+
+# you can set your various flags here
+# base is included every time for build
+export base_flags="-c -Wall -Wextra -I$(pwd)/$IDIR"
+export base_lflags="-fstack-protector-strong -lcurl -lpthread"
+
+# debugging is for debugging
+export debug_flags="-g -DDEBUG" # define any other symbols you want
+export debug_lflags=-g
+
+# build is for a production build
+export build_flags="-fPIE -O3"
+export build_lflags="-Wl,-z,noexecstack -pie -fPIE"
