@@ -50,3 +50,11 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Custom Rules
+
+test_logs/
+build/
+# The app name will go here, this is done automatically.
+# Don't delete the following line.
+app

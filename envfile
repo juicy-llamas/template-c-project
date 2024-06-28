@@ -4,6 +4,7 @@
 # Config
 # ======
 
+# lets us know `source envfile` was called
 export BUILD_ENV_IS_DEFINED=true
 
 # are we debugging (MUST BE EQUAL TO "true" for debugging to work!)
@@ -53,3 +54,7 @@ export debug_lflags=-g
 # build is for a production build
 export build_flags="-fPIE -O3"
 export build_lflags="-Wl,-z,noexecstack -pie -fPIE"
+
+# this fixes gitignore
+sed "\$s/.*/$APPNAME/" .gitignore > /tmp/.gitignore_temp
+mv /tmp/.gitignore_temp .gitignore
