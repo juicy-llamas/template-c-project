@@ -42,10 +42,13 @@ export TEST_TEMPLATE=src/templates/testtmpl.c_part
 export TEST_LOG_DIR=test_logs
 export TEST_LOGFILE_BASE=test_log_
 
+# export USE_PTHREAD=true
 # you can set your various flags here
 # base is included every time for build
 export base_flags="-c -Wall -Wextra -I$(pwd)/$IDIR"
-export base_lflags="-fstack-protector-strong -lcurl -lpthread"
+base_flags="$base_flags $([ -z $USE_PTHREAD ] && echo ' -DUSE_PTHREAD')"
+export base_lflags="-fstack-protector-strong"
+base_lflags="$base_lflags $([ -z $USE_PTHREAD ] && echo ' -lpthread')"
 
 # debugging is for debugging
 export debug_flags="-g -DDEBUG" # define any other symbols you want

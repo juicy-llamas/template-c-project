@@ -7,10 +7,13 @@
 #include <errno.h>
 #include <time.h>
 #include <string.h>
-#include <pthread.h>
 #include <stdlib.h>
 
+#ifdef USE_PTHREAD
+#include <pthread.h>
+
 static pthread_mutex_t log_mutex;
+#endif
 
 void pbuffer ( const char* ptr, size_t ptr_len ) {
     printf( "[ " );
@@ -33,8 +36,10 @@ void log_at_level ( enum logging_level level, const char* fmt,
     char* errno_str;
     FILE* print_stream = stdout;
 
+#ifdef USE_PTHREAD
     if ( pthread_mutex_lock( &(log_mutex) ) != 0 )
         log_err_ret( (void)0, "mutex lock failed" );
+#endif
 
     // no point in doing anything
     // if ( level < ctx->prompt_level && level < ctx->file_level )
@@ -103,9 +108,11 @@ void log_at_level ( enum logging_level level, const char* fmt,
     
     // if ( level >= ctx->file_level )
     //     vfprintf( ctx->log_file, str_prompt, ap );
-    
+   
+#ifdef USE_PTHREAD
     if ( pthread_mutex_unlock( &(log_mutex) ) != 0 )
         log_err_ret( (void)0, "mutex unlock failed" );
+#endif
 
     if ( level == FATAL )
         exit( 1 );
